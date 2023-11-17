@@ -26,6 +26,16 @@ function getMpesaAccessToken($consumerKey, $consumerSecret) {
     curl_close($curl);
 
     return $response->access_token;
+    
+    if (curl_errno($curl)) {
+        logActivity("Curl error in getMpesaAccessToken: " . curl_error($curl));
+        return null; // or handle the error as appropriate
+    }
+
+    if ($response === false) {
+        logActivity("Invalid response in getMpesaAccessToken");
+        return null; // or handle the error as appropriate
+    }
 }
 
 /**
