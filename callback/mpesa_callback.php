@@ -6,7 +6,7 @@ require_once __DIR__ . '/mpesa_functions.php';
 App::load_function('gateway');
 App::load_function('invoice');
 
-$gatewayModuleName = 'mpesa';
+$gatewayModuleName = basename(__FILE__, '.php');
 $gatewayParams = getGatewayVariables($gatewayModuleName);
 
 if (!$gatewayParams['type']) {
