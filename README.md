@@ -49,7 +49,7 @@ If you need help or encounter any issues, please contact support at https://carl
 
 ## License
 
-This module is proprietary software and must not be copied, modified, or distributed without permission from [Your Company].
+The Mpesa Payment Gateway Module for WHMCS is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Author
 
