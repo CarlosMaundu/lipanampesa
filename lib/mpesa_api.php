@@ -89,7 +89,6 @@ function registerC2BURL($params) {
         'ShortCode' => $params['shortCode'],
         'ResponseType' => 'Completed',
         'ConfirmationURL' => 'https://yourdomain.com/confirmation_url',
-        'ValidationURL' => 'https://yourdomain.com/validation_url'
     );
 
     $data_string = json_encode($curl_post_data);
