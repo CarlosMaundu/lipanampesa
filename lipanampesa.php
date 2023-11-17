@@ -3,9 +3,9 @@
 use WHMCS\Database\Capsule;
 
 /**
- * Mpesa Payment Gateway Addon Module
+ * Lipa Na M-Pesa Payment Gateway Addon Module
  *
- * This module integrates Mpesa payment gateway with WHMCS.
+ * This module integrates M-Pesa payment gateway with WHMCS.
  */
 
 if (!defined("WHMCS")) {
@@ -17,13 +17,13 @@ if (!defined("WHMCS")) {
  *
  * @return array
  */
-function mpesa_addon_MetaData()
+function lipanampesa_MetaData()
 {
     return array(
-        'DisplayName' => 'Mpesa Payment Gateway',
-        'APIVersion' => '1.1', // Use API Version 1.1
-        'Description' => 'Integrates Mpesa payment gateway for transactions.',
-        'Author' => 'CarlosMaundu',
+        'DisplayName' => 'Lipa Na M-Pesa Payment Gateway',
+        'APIVersion' => '1.1.0', // Use API Version 1.1.0
+        'Description' => 'Integrates Lipa Na M-Pesa payment gateway for transactions.',
+        'Author' => 'Carlos',
         'Version' => '1.0',
         'Language' => 'english',
     );
@@ -34,9 +34,18 @@ function mpesa_addon_MetaData()
  *
  * @return array
  */
-function mpesa_addon_config()
+function lipanampesa_config()
 {
     return array(
+        'FriendlyName' => array(
+            'Type' => 'System',
+            'Value' => 'Lipa Na M-Pesa Payment',
+            'Description' => "A module designed to integrate Lipa Na M-Pesa payment gateway for transactions",
+            'Version' => '1.0.0',
+            'Author' => 'Mpesa',
+            'Language' => 'english',
+        ),
+
         'consumerKey' => array(
             'FriendlyName' => 'Consumer Key',
             'Type' => 'text',
@@ -95,7 +104,7 @@ function mpesa_addon_config()
  *
  * @return array
  */
-function mpesa_addonmodule_activate()
+function lipanampesa_activate()
 {
     try {
         if (!Capsule::schema()->hasTable('tblpbtransactions')) {
@@ -128,7 +137,7 @@ function mpesa_addonmodule_activate()
  *
  * @return array
  */
-function mpesa_addonmodule_deactivate()
+function lipanampesa_deactivate()
 {
     // You may implement actions on deactivation like removing custom tables or settings
     return array('status' => 'success', 'description' => 'Mpesa addon module deactivated successfully.');
@@ -139,7 +148,7 @@ function mpesa_addonmodule_deactivate()
  *
  * @param array $vars
  */
-function mpesa_addon_upgrade($vars)
+function lipanampesa_upgrade($vars)
 {
     $version = $vars['version'];
     // Perform version upgrade tasks here

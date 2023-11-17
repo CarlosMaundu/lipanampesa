@@ -14,7 +14,7 @@ function mpesa_adminmodule_config() {
     return array(
         'name' => 'Mpesa Admin Module',
         'description' => 'Administrative interface for the Mpesa Payment Gateway.',
-        'author' => 'CarlosMaundu',
+        'author' => 'Carlos',
         'language' => 'english',
         'version' => '1.0',
         'fields' => [
