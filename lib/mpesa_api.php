@@ -41,7 +41,7 @@ function getMpesaAccessToken($consumerKey, $consumerSecret) {
 /**
  * Initiates an STK Push to the customer's phone.
  */
-function initiateSTKPush($params, $amount, $phone, $invoiceId) {
+function initiateSTKPush($params, $amount, $phone, $invoiceId, $systemUrl) {
     $accessToken = getMpesaAccessToken($params['consumerKey'], $params['consumerSecret']);
     $url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
@@ -57,7 +57,7 @@ function initiateSTKPush($params, $amount, $phone, $invoiceId) {
         'PartyA' => $phone,
         'PartyB' => $params['shortCode'],
         'PhoneNumber' => $phone,
-        'CallBackURL' => 'https://yourdomain.com/mpesa_callback.php',
+        'CallBackURL' => $systemUrl . '/modules/gateways/lipanampesa/callback/mpesa_callback.php',
         'AccountReference' => $invoiceId,
         'TransactionDesc' => 'Payment for Invoice ' . $invoiceId
     );
@@ -81,14 +81,14 @@ function initiateSTKPush($params, $amount, $phone, $invoiceId) {
 /**
  * Registers the C2B URL for transaction confirmation.
  */
-function registerC2BURL($params) {
+function registerC2BURL($params, $systemUrl) {
     $accessToken = getMpesaAccessToken($params['consumerKey'], $params['consumerSecret']);
     $url = 'https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl';
 
     $curl_post_data = array(
         'ShortCode' => $params['shortCode'],
         'ResponseType' => 'Completed',
-        'ConfirmationURL' => 'https://yourdomain.com/confirmation_url',
+        'ConfirmationURL' => $systemUrl . '/modules/gateways/lipanampesa/callback/your_confirmation_script.php',
     );
 
     $data_string = json_encode($curl_post_data);

@@ -28,15 +28,32 @@ if (isset($transactionData['Body']['stkCallback'])) {
     $response = processSTKPushResponse($transactionData['Body']['stkCallback'], $transactionData['Body']['stkCallback']['MerchantRequestID']);
     $invoiceId = $transactionData['Body']['stkCallback']['MerchantRequestID'];
 
-    // Perform additional validation on $invoiceId if necessary
+    // Validate Invoice ID
+    if (!validateInvoiceID($invoiceId, $gatewayModuleName)) {
+        logActivity("Invalid Invoice ID in STK Push Response: " . $invoiceId);
+        exit;
+    }
 
     if ($response['ResultCode'] == 0) {
-        // Redirect customer to invoice with success message
         header('Location: ' . $gatewayParams['systemurl'] . 'viewinvoice.php?id=' . $invoiceId . '&paymentsuccess=true');
     } else {
-        // Redirect customer to invoice with failure message
         header('Location: ' . $gatewayParams['systemurl'] . 'viewinvoice.php?id=' . $invoiceId . '&paymentfailed=true');
     }
+}
+
+if (isset($transactionData['TransactionType']) && $transactionData['TransactionType'] == 'PayBill') {
+    $response = processC2BConfirmation($transactionData);
+
+    if ($response['ResultCode'] == 0) {
+        header('Content-Type: application/json');
+        echo json_encode(['ResultCode' => 0, 'ResultDesc' => 'Confirmation received successfully']);
+    }
+}
+
+// Function to validate Invoice ID
+function validateInvoiceID($invoiceId, $gatewayModuleName) {
+    $invoice = Capsule::table('tblinvoices')->where('id', $invoiceId)->first();
+    return !is_null($invoice);
 }
 
 // Handle C2B confirmation

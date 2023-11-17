@@ -9,7 +9,7 @@ if (!defined("WHMCS")) {
 
 // Function to process STK Push response and record the transaction
 function processSTKPushResponse($response, $invoiceId) {
-    if ($response['ResponseCode'] == '0') {
+    if ($response['ResponseCode'] == '0' && validateInvoiceID($invoiceId)) {
         recordTransaction($response, $invoiceId, 'STK Push Initiated');
         return 'Success';
     } else {
@@ -45,7 +45,16 @@ function recordTransaction($transactionData, $invoiceId, $status) {
 
 // Function to process C2B confirmation and record the transaction
 function processC2BConfirmation($transactionData) {
-    // Assuming $transactionData has all required details for the transaction
-    recordTransaction($transactionData, $transactionData['InvoiceID'], 'Completed');
-    return 'Success';
+    if (isset($transactionData['TransID'], $transactionData['TransAmount'], $transactionData['MSISDN'], $transactionData['BillRefNumber']) && validateInvoiceID($transactionData['BillRefNumber'])) {
+        recordTransaction($transactionData, $transactionData['BillRefNumber'], 'Completed');
+        return 'Success';
+    } else {
+        logActivity("Invalid or incomplete C2B transaction data");
+        return 'Failed';
+    }
+}
+// Function to validate Invoice ID
+function validateInvoiceID($invoiceId) {
+    $invoice = Capsule::table('tblinvoices')->where('id', $invoiceId)->first();
+    return !is_null($invoice);
 }
