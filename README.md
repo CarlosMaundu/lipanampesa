@@ -45,7 +45,7 @@ For C2B, they'll make the payment using their Mpesa menu and then enter the tran
 
 ## Support
 
-If you need help or encounter any issues, please contact support at [your support email].
+If you need help or encounter any issues, please contact support at https://carlosmaundu.github.io/.
 
 ## License
 
