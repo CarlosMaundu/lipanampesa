@@ -15,13 +15,12 @@ if (!defined("WHMCS")) {
 /**
  * Define module's metadata.
  *
- * @return array
+ *
  */
-function lipanampesa_MetaData()
-{
+function lipanampesa_MetaData() {
     return array(
         'DisplayName' => 'Lipa Na M-Pesa Payment Gateway',
-        'APIVersion' => '1.1.0', // Use API Version 1.1.0
+        'APIVersion' => '1.1.0',
         'Description' => 'Integrates Lipa Na M-Pesa payment gateway for transactions.',
         'Author' => 'Carlos',
         'Version' => '1.0',
@@ -32,20 +31,15 @@ function lipanampesa_MetaData()
 /**
  * Define module's configuration options.
  *
- * @return array
  */
-function lipanampesa_config()
-{
+function lipanampesa_config() {
     return array(
         'FriendlyName' => array(
             'Type' => 'System',
             'Value' => 'Lipa Na M-Pesa Payment',
-            'Description' => "A module designed to integrate Lipa Na M-Pesa payment gateway for transactions",
-            'Version' => '1.0.0',
-            'Author' => 'Mpesa',
-            'Language' => 'english',
+            'Description' => 'Integrate Lipa Na M-Pesa payment gateway for transactions',
         ),
-
+        // Consumer settings
         'consumerKey' => array(
             'FriendlyName' => 'Consumer Key',
             'Type' => 'text',
@@ -60,6 +54,7 @@ function lipanampesa_config()
             'Default' => '',
             'Description' => 'Enter your Mpesa Consumer Secret.',
         ),
+        // Transaction settings
         'tillNumber' => array(
             'FriendlyName' => 'Till Number',
             'Type' => 'text',
@@ -72,7 +67,7 @@ function lipanampesa_config()
             'Type' => 'text',
             'Size' => '6',
             'Default' => '',
-            'Description' => 'Store Number (Applicable for till numbers)',
+            'Description' => 'Applicable for till numbers.',
         ),
         'paybillNumber' => array(
             'FriendlyName' => 'Paybill Number',
@@ -95,17 +90,15 @@ function lipanampesa_config()
             'Default' => 'Till',
             'Description' => 'Select the mode of transaction (Till or Paybill).',
         ),
-        // Additional configuration options can be added here
     );
 }
 
 /**
  * Handle actions to be performed on module activation.
  *
- * @return array
+ *
  */
-function lipanampesa_activate()
-{
+function lipanampesa_activate() {
     try {
         if (!Capsule::schema()->hasTable('tblpbtransactions')) {
             Capsule::schema()->create('tblpbtransactions', function ($table) {
@@ -139,8 +132,9 @@ function lipanampesa_activate()
  */
 function lipanampesa_deactivate()
 {
-    // You may implement actions on deactivation like removing custom tables or settings
+    
     return array('status' => 'success', 'description' => 'Mpesa addon module deactivated successfully.');
+    // You can add actions on deactivation like removing custom tables or settings here.
 }
 
 /**

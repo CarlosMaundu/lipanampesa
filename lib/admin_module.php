@@ -1,6 +1,7 @@
 
 <?php
 
+require_once __DIR__ . '/lipanampesa.php';
 use WHMCS\Database\Capsule;
 
 if (!defined("WHMCS")) {
@@ -13,85 +14,27 @@ if (!defined("WHMCS")) {
 function mpesa_adminmodule_config() {
     return array(
         'name' => 'Mpesa Admin Module',
-        'description' => 'Administrative interface for the Mpesa Payment Gateway.',
+        'description' => 'Administrative interface for Mpesa Payment Gateway.',
         'author' => 'Carlos',
         'language' => 'english',
         'version' => '1.0',
-        'fields' => [
-            'consumerKey' => [
-                'FriendlyName' => 'Consumer Key',
-                'Type' => 'text',
-                'Size' => '25',
-                'Default' => '',
-                'Description' => 'Enter your Mpesa Consumer Key.',
-            ],
-            'consumerSecret' => [
-                'FriendlyName' => 'Consumer Secret',
-                'Type' => 'text',
-                'Size' => '50',
-                'Default' => '',
-                'Description' => 'Enter your Mpesa Consumer Secret.',
-            ],
-            'tillNumber' => [
-                'FriendlyName' => 'Till Number',
-                'Type' => 'text',
-                'Size' => '10',
-                'Default' => '',
-                'Description' => 'Enter your Mpesa Till Number.',
-            ],
-            'storeNumber' => [
-                'FriendlyName' => 'Store Number',
-                'Type' => 'text',
-                'Size' => '6',
-                'Default' => '',
-                'Description' => 'Store Number (Applicable for till numbers)',
-            ],
-            'paybillNumber' => [
-                'FriendlyName' => 'Paybill Number',
-                'Type' => 'text',
-                'Size' => '10',
-                'Default' => '',
-                'Description' => 'Enter your Mpesa Paybill Number.',
-            ],
-            'passKey' => [
-                'FriendlyName' => 'Pass Key',
-                'Type' => 'password',
-                'Size' => '50',
-                'Default' => '',
-                'Description' => 'Enter your Mpesa Pass Key.',
-            ],
-            'mode' => [
-                'FriendlyName' => 'Mode',
-                'Type' => 'radio',
-                'Options' => 'Till,Paybill',
-                'Default' => 'Till',
-                'Description' => 'Select the mode of transaction (Till or Paybill).',
-            ],
-            // Additional configuration options can be added here
-        ],
+        'fields' => lipanampesa_config(), // Reuse the configurations from lipanampesa.php
     );
 }
+
 
 /**
  * Admin Area Output.
  */
 function mpesa_adminmodule_output($vars) {
     echo '<p>Welcome to the Mpesa Admin Module. Configure your Mpesa settings below.</p>';
-
-    // Display current settings and provide a form for updating them
     $settings = mpesa_adminmodule_getSettings();
-
     echo '<form method="post" action="addonmodules.php?module=mpesa_adminmodule&save=true">';
     foreach ($settings as $setting => $value) {
-        $friendlyName = $vars['fields'][$setting]['FriendlyName'];
-        $fieldType = $vars['fields'][$setting]['Type'];
-        $description = $vars['fields'][$setting]['Description'];
-        echo "<label>{$friendlyName}</label><br />";
-        if ($fieldType == 'text' || $fieldType == 'password') {
-            echo "<input type='{$fieldType}' name='{$setting}' value='{$value}'><br />";
-        }
-        // Add other field types handling as needed
-        echo "<small>{$description}</small><br /><br />";
+        $field = $vars['fields'][$setting];
+        echo "<label>{$field['FriendlyName']}</label><br />";
+        echo "<input type='{$field['Type']}' name='{$setting}' value='{$value}'><br />";
+        echo "<small>{$field['Description']}</small><br /><br />";
     }
     echo '<input type="submit" value="Save Changes">';
     echo '</form>';
@@ -102,7 +45,7 @@ function mpesa_adminmodule_output($vars) {
  */
 function mpesa_adminmodule_getSettings() {
     return Capsule::table('tbladdonmodules')
-                   ->where('module', 'mpesa_addon')
+                   ->where('module', 'mpesa_adminmodule')
                    ->pluck('value', 'setting');
 }
 
@@ -112,7 +55,7 @@ function mpesa_adminmodule_getSettings() {
 if (isset($_REQUEST['save'])) {
     foreach ($_POST as $setting => $value) {
         Capsule::table('tbladdonmodules')
-               ->where('module', 'mpesa_addon')
+               ->where('module', 'mpesa_adminmodule')
                ->where('setting', $setting)
                ->update(['value' => $value]);
     }
@@ -154,5 +97,3 @@ function mpesa_adminmodule_sidebar($vars) {
     $sidebar .= '</ul>';
     return $sidebar;
 }
-
-// Implement other necessary admin functions or hooks
